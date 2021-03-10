@@ -30,6 +30,31 @@
                   hint="Add Description"
                 ></v-textarea>
               </v-col>
+              <v-col>
+                <template>
+                  <div class="text-left">
+                    <v-menu offset-y>
+                      <template v-slot:activator="{ on, attrs }">
+                        <v-btn color="primary" dark v-bind="attrs" v-on="on">
+                          <span class="mr-2">{{ currentStatus }}</span>
+                          <v-icon>mdi-menu-down</v-icon>
+                        </v-btn>
+                      </template>
+                      <v-list>
+                        <v-list-item
+                          v-for="(item, index) in itemsFilter"
+                          :key="index"
+                          @click="statusSelect(item)"
+                        >
+                          <v-list-item-title>{{
+                            item.title
+                          }}</v-list-item-title>
+                        </v-list-item>
+                      </v-list>
+                    </v-menu>
+                  </div>
+                </template>
+              </v-col>
             </v-row>
           </v-container>
           <small>*indicates required field</small>
@@ -57,18 +82,26 @@ export default {
     dialog: false,
     topic: "",
     description: "",
+    currentStatus : "TODO",
+    itemsFilter: [
+      { title: "TODO" },
+      { title: "DOING" },
+      { title: "COMPLETE" },
+    ],
   }),
   created() {},
   methods: {
     createTodo() {
       console.log("ADD todo");
       console.log("todo :" + this.topic + ", desc :" + this.description);
-        var requestTodo = {
-            "name" : this.topic,
-            "todo" : this.description
-        }
-        this.$store.dispatch("createTodo",requestTodo);
-    },
+      var requestTodo = {
+        name: this.topic,
+        todo: this.description,
+      };
+      this.$store.dispatch("createTodo", requestTodo);
+    },statusSelect(status){
+      this.currentStatus = status.title
+    }
   },
   computed: {},
 };
