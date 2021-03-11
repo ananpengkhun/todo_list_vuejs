@@ -25,10 +25,10 @@
     <v-simple-table>
       <template>
         <thead>
-          <tr>
-            <th class="text-left">Topic</th>
-            <th class="text-left">Description</th>
-            <th class="text-left">Status</th>
+          <tr >
+            <th class="text-left"><h1>Topic</h1></th>
+            <th class="text-left"><h1>Description</h1></th>
+            <th class="text-left"><h1>Status</h1></th>
           </tr>
         </thead>
         <tbody>
@@ -63,16 +63,17 @@
                     <v-text-field
                       label="Edit Topic*"
                       v-model="topic"
-                      required
+                      :rules="rules"
                     ></v-text-field>
                   </v-col>
 
                   <v-col cols="12">
                     <v-textarea
                       name="input-7-1"
-                      label="Description"
+                      label="Description*"
                       v-model="descript"
                       hint="Add Description"
+                      :rules="rules"
                     ></v-textarea>
                   </v-col>
                   <v-col>
@@ -111,6 +112,16 @@
             </v-card-text>
             <v-card-actions>
               <v-spacer></v-spacer>
+              <v-btn color="blue darken-1" text @click="dialog = false">
+                Close
+              </v-btn>
+              <v-btn
+                color="blue darken-1"
+                text
+                @click="confirmEditTodo()"
+              >
+                Update
+              </v-btn>
             </v-card-actions>
           </v-card>
         </v-dialog>
@@ -138,15 +149,26 @@
     </v-simple-table>
   </div>
 </template>
+<style>
+.tr-header{
+  font-size: 100px !important;
+}
+</style>
 <script>
 import { mapState } from "vuex";
 import ChipStatus from "./ChipStatus";
 export default {
   data: () => ({
+    rules: [
+      (value) => !!value || "Required.",
+      (value) => (value && value.length >= 3) || "Min 3 characters",
+    ],
     currentFilter: "All",
     idRemove: -1,
+    idForUpdate: -1,
     topic: "",
     descript: "",
+    statusForUpdate: -1,
     dialog: false,
     dialogDelete: false,
     desserts: [],
@@ -171,13 +193,27 @@ export default {
       this.$store.dispatch("getTodo");
     },
     editTodo(todo) {
-      console.log("editTodo row at :" + todo.id);
+      this.idForUpdate = todo.id;
       this.topic = todo.name;
       this.descript = todo.todo;
       this.currentStatus = this.editFilter.find((item) => {
         if (item.status == todo.status) return item;
       }).title;
       if (!this.dialogDelete) this.dialog = true;
+    },
+    confirmEditTodo() {
+      // this.validate()
+      console.log("update todo");
+      var request = {
+        id: this.idForUpdate,
+        name: this.topic,
+        todo: this.descript,
+        status: this.statusForUpdate,
+      };
+      this.$store.dispatch("updateTodo", request).then(()=>{
+
+        this.dialog = false
+      });
     },
     removeTodo(id) {
       console.log("removeTodo row at :" + id);
@@ -212,6 +248,12 @@ export default {
     },
     statusSelect(status) {
       this.currentStatus = status.title;
+      this.statusForUpdate = status.status;
+    },validate() {
+      console.log(this.topic.length)
+      console.log(this.descript.length)
+      if (this.topic.length < 3) return;
+      if (this.descript.length < 3) return;
     },
   },
   computed: {

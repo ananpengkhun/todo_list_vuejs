@@ -17,6 +17,12 @@ class TodoProvider extends HttpRequest {
     return data
   }
 
+  async updateTodo(request){
+    const {data} = await this.update('/todo',request)
+    return data
+
+  }
+
   async removeTodo (request) {
     const {data} = await this.delete('/todo',null,request)
     return data
