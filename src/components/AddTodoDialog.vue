@@ -79,7 +79,7 @@ export default {
   data: () => ({
     rules: [
       (value) => !!value || "Required.",
-      (value) => (value && value.length >= 3) || "Min 3 characters",
+      (value) => (value && value.length > 3) || "Min 4 characters",
     ],
     dialog: false,
     topic: "",
@@ -95,16 +95,10 @@ export default {
   created() {},
   methods: {
     createTodo() {
-      // if(!this.validate()) return;
+      if(!this.validate()) return;
+      
       console.log("ADD todo");
-      console.log(
-        "todo :" +
-          this.topic +
-          ", desc :" +
-          this.description +
-          ", status :" +
-          this.reqStatus
-      );
+      
       var requestTodo = {
         name: this.topic,
         todo: this.description,
@@ -128,11 +122,11 @@ export default {
     validate() {
       var isPass = false;
       if (this.topic.length > 3) {
-        if (this.description.length < 3) {
+        if (this.description.length > 3) {
           isPass = true;
         }
       }
-      return isPass
+      return isPass;
     },
   },
   computed: {},

@@ -76,10 +76,22 @@ const mutations = {
   UPDATE_TODO(state,data){
     console.log(data)
     let i = state.user.findIndex(r =>r.id == data.body.id)
-    console.log("index :"+i)
+    let iFull = state.fullTodo.findIndex(r => r.id == data.body.id)
+    
     state.user[i].name = data.body.name
     state.user[i].todo = data.body.todo
     state.user[i].status = data.body.status
+
+    state.fullTodo[iFull].name = data.body.name
+    state.fullTodo[iFull].todo = data.body.todo
+    state.fullTodo[iFull].status = data.body.status
+
+
+    var filter = state.user.filter(item => {
+      if (item.status == state.currentFilter) return item
+    });
+    state.user = filter
+
 
   },
 
@@ -92,6 +104,7 @@ const mutations = {
     var filter = state.user.filter(item => {
       if (item.status == status) return item
     });
+    
     state.user = filter
   }
 }

@@ -161,7 +161,7 @@ export default {
   data: () => ({
     rules: [
       (value) => !!value || "Required.",
-      (value) => (value && value.length >= 3) || "Min 3 characters",
+      (value) => (value && value.length > 3) || "Min 4 characters",
     ],
     currentFilter: "All",
     idRemove: -1,
@@ -202,7 +202,7 @@ export default {
       if (!this.dialogDelete) this.dialog = true;
     },
     confirmEditTodo() {
-      // this.validate()
+      if(!this.validate()) return
       console.log("update todo");
       var request = {
         id: this.idForUpdate,
@@ -250,10 +250,13 @@ export default {
       this.currentStatus = status.title;
       this.statusForUpdate = status.status;
     },validate() {
-      console.log(this.topic.length)
-      console.log(this.descript.length)
-      if (this.topic.length < 3) return;
-      if (this.descript.length < 3) return;
+      var isPass = false;
+      if (this.topic.length > 3) {
+        if (this.descript.length > 3) {
+          isPass = true;
+        }
+      }
+      return isPass;
     },
   },
   computed: {
