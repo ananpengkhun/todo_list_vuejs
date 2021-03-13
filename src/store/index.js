@@ -87,6 +87,7 @@ const mutations = {
     state.fullTodo[iFull].status = data.body.status
 
 
+    if (state.currentFilter == 99) return
     var filter = state.user.filter(item => {
       if (item.status == state.currentFilter) return item
     });

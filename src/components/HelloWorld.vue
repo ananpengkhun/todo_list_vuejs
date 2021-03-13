@@ -196,9 +196,11 @@ export default {
       this.idForUpdate = todo.id;
       this.topic = todo.name;
       this.descript = todo.todo;
-      this.currentStatus = this.editFilter.find((item) => {
+      let fillCurStatus = this.editFilter.find((item) => {
         if (item.status == todo.status) return item;
-      }).title;
+      })
+      this.currentStatus = fillCurStatus.title;
+      this.statusForUpdate = fillCurStatus.status
       if (!this.dialogDelete) this.dialog = true;
     },
     confirmEditTodo() {
